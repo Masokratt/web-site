@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahmoud Ahmed — Graphic Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #ff2e2e;
+  --red-dim: #8b0000;
+  --red-glow: rgba(255,46,46,0.15);
+  --bg: #080808;
+  --bg2: #111;
+  --bg3: #161616;
+  --white: #ffffff;
+  --gray: #888;
+  --light: #ccc;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Cairo', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ===== CUSTOM CURSOR ===== */
+.cursor {
+  width: 12px; height: 12px;
+  background: var(--red);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  transition: transform 0.15s ease;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--red);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 99998;
+  transition: all 0.12s ease;
+  opacity: 0.6;
+}
+
+/* ===== LOADER ===== */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 99997;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+.loader.hide { opacity: 0; visibility: hidden; }
+
+.loader-name {
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(3rem, 8vw, 6rem);
+  letter-spacing: 8px;
+  color: var(--red);
+  animation: flicker 0.8s ease infinite alternate;
+}
+.loader-bar {
+  width: 200px; height: 2px;
+  background: var(--bg3);
+  margin-top: 20px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.loader-fill {
+  height: 100%;
+  background: var(--red);
+  animation: loadFill 1.8s ease forwards;
+}
+
+@keyframes loadFill { from { width:0 } to { width:100% } }
+@keyframes flicker {
+  from { opacity: 1; text-shadow: 0 0 20px rgba(255,46,46,0.8); }
+  to { opacity: 0.7; text-shadow: 0 0 40px rgba(255,46,46,0.4); }
+}
+
+/* ===== NOISE OVERLAY ===== */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.4;
+}
+
+/* ===== GRID BG ===== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,46,46,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,46,46,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  z-index: -1;
+  animation: gridShift 20s linear infinite;
+}
+@keyframes gridShift {
+  from { background-position: 0 0; }
+  to { background-position: 60px 60px; }
+}
+
+/* ===== NAVBAR ===== */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  padding: 18px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(8,8,8,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,46,46,0.08);
+  z-index: 1000;
+  transition: padding 0.3s ease;
+}
+nav.scrolled { padding: 12px 40px; }
+
+.nav-logo {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.6rem;
+  letter-spacing: 3px;
+  color: var(--red);
+  text-decoration: none;
+}
+
+.nav-links { display: flex; gap: 8px; list-style: none; }
+.nav-links a {
+  color: var(--gray);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+.nav-links a:hover {
+  color: var(--white);
+  background: var(--red-glow);
+}
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 8vw;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-tag {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 4px;
+  color: var(--red);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: slideUp 0.8s ease 1.9s forwards;
+}
+
+.hero h1 {
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(4rem, 12vw, 10rem);
+  line-height: 0.9;
+  letter-spacing: 4px;
+  color: var(--white);
+  opacity: 0;
+  animation: slideUp 0.8s ease 2.1s forwards;
+}
+
+.hero h1 span {
+  color: var(--red);
+  display: block;
+  -webkit-text-stroke: 2px var(--red);
+  color: transparent;
+  filter: drop-shadow(0 0 20px rgba(255,46,46,0.4));
+}
+
+.hero-sub {
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  color: var(--gray);
+  margin-top: 1.5rem;
+  max-width: 500px;
+  line-height: 1.8;
+  opacity: 0;
+  animation: slideUp 0.8s ease 2.3s forwards;
+}
+
+.hero-cta {
+  margin-top: 2.5rem;
+  display: flex;
+  gap: 16px;
+  opacity: 0;
+  animation: slideUp 0.8s ease 2.5s forwards;
+}
+
+.btn-primary {
+  background: var(--red);
+  color: var(--white);
+  padding: 14px 32px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  border: 2px solid var(--red);
+}
+.btn-primary:hover {
+  background: transparent;
+  color: var(--red);
+  box-shadow: 0 0 30px rgba(255,46,46,0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--white);
+  padding: 14px 32px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  border: 2px solid rgba(255,255,255,0.15);
+  transition: all 0.3s ease;
+}
+.btn-outline:hover {
+  border-color: var(--white);
+  box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+/* Hero decorative number */
+.hero-num {
+  position: absolute;
+  right: 8vw;
+  bottom: 15vh;
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(6rem, 18vw, 16rem);
+  color: rgba(255,46,46,0.04);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  animation: float 6s ease-in-out infinite;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 40px;
+  left: 8vw;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  animation: fadeIn 1s ease 3s forwards;
+}
+.hero-scroll span {
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  color: var(--gray);
+  font-weight: 600;
+}
+.scroll-line {
+  width: 60px;
+  height: 1px;
+  background: var(--red);
+  animation: scrollPulse 2s ease infinite;
+}
+@keyframes scrollPulse {
+  0%,100% { width: 60px; opacity: 1; }
+  50% { width: 100px; opacity: 0.5; }
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+@keyframes slideUp {
+  from { opacity:0; transform: translateY(30px); }
+  to { opacity:1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  to { opacity:1; }
+}
+
+/* ===== SECTION BASE ===== */
+.section {
+  padding: 120px 8vw;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 5px;
+  color: var(--red);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  max-width: 60px;
+  height: 1px;
+  background: var(--red);
+}
+
+.section-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  letter-spacing: 3px;
+  line-height: 1;
+  margin-bottom: 3rem;
+}
+
+/* ===== ABOUT ===== */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.about-text p {
+  color: var(--light);
+  font-size: 1.05rem;
+  line-height: 2;
+  margin-bottom: 1.5rem;
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 2rem;
+}
+
+.stat-box {
+  background: var(--bg3);
+  border: 1px solid rgba(255,46,46,0.1);
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+.stat-box:hover {
+  border-color: var(--red);
+  background: var(--red-glow);
+  transform: translateY(-4px);
+}
+.stat-num {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 2.5rem;
+  color: var(--red);
+  letter-spacing: 2px;
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--gray);
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+.about-visual {
+  position: relative;
+}
+.about-img-frame {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: var(--bg3);
+  border-radius: 8px;
+  border: 1px solid rgba(255,46,46,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  color: rgba(255,46,46,0.15);
+  position: relative;
+  overflow: hidden;
+}
+.about-img-frame::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,46,46,0.05) 0%, transparent 70%);
+  animation: rotateBg 8s linear infinite;
+}
+@keyframes rotateBg { to { transform: rotate(360deg); } }
+
+.about-badge {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  background: var(--red);
+  color: var(--white);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  border: 4px solid var(--bg);
+  animation: rotateBadge 8s linear infinite;
+}
+.about-badge small {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+@keyframes rotateBadge { to { transform: rotate(360deg); } }
+
+/* ===== PROJECTS ===== */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+}
+
+.proj-card {
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  cursor: none;
+  background: var(--bg3);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.proj-card:nth-child(1) { grid-column: span 7; }
+.proj-card:nth-child(2) { grid-column: span 5; }
+.proj-card:nth-child(3) { grid-column: span 4; }
+.proj-card:nth-child(4) { grid-column: span 8; }
+
+.proj-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(255,46,46,0.15);
+}
+
+.proj-img {
+  width: 100%;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+  background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,46,46,0.12);
+  font-size: 4rem;
+}
+
+.proj-card:hover .proj-img { transform: scale(1.05); }
+
+.proj-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.proj-card:hover .proj-overlay { opacity: 1; }
+
+.proj-cat {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--red);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.proj-name {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  color: var(--white);
+}
+
+.proj-info {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.proj-info h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--light);
+}
+.proj-info p {
+  font-size: 0.78rem;
+  color: var(--gray);
+  margin-top: 4px;
+}
+
+/* ===== SKILLS ===== */
+.skills-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.skills-text p {
+  color: var(--light);
+  line-height: 2;
+  font-size: 1rem;
+}
+
+.skill-bars { display: flex; flex-direction: column; gap: 20px; }
+
+.skill-item {}
+.skill-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.skill-top span:last-child { color: var(--red); }
+
+.skill-track {
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.skill-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--red-dim), var(--red));
+  border-radius: 2px;
+  width: 0;
+  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.skill-fill.animate { width: var(--pct); }
+
+.tools-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 2rem;
+}
+.tool-chip {
+  padding: 8px 18px;
+  border: 1px solid rgba(255,46,46,0.2);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--light);
+  background: rgba(255,46,46,0.04);
+  transition: all 0.3s ease;
+}
+.tool-chip:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: var(--red-glow);
+  transform: translateY(-2px);
+}
+
+/* ===== CONTACT ===== */
+.contact-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.contact-text p {
+  color: var(--light);
+  line-height: 2;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.contact-links { display: flex; flex-direction: column; gap: 12px; }
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg3);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--light);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.contact-link:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: var(--red-glow);
+  transform: translateX(-6px);
+}
+.contact-link .link-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(255,46,46,0.1);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.contact-form { display: flex; flex-direction: column; gap: 14px; }
+
+.form-input, .form-textarea {
+  background: var(--bg3);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 6px;
+  padding: 14px 18px;
+  color: var(--white);
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+  resize: none;
+  direction: rtl;
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--gray); }
+.form-input:focus, .form-textarea:focus { border-color: var(--red); }
+.form-textarea { min-height: 130px; }
+
+.form-btn {
+  background: var(--red);
+  color: var(--white);
+  border: 2px solid var(--red);
+  padding: 14px 32px;
+  border-radius: 6px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  cursor: none;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+.form-btn:hover {
+  background: transparent;
+  color: var(--red);
+  box-shadow: 0 0 30px rgba(255,46,46,0.3);
+}
+
+/* ===== REVEAL ANIMATION ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== FOOTER ===== */
+footer {
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 40px 8vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+footer p { font-size: 0.8rem; color: var(--gray); }
+.footer-logo {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.4rem;
+  letter-spacing: 3px;
+  color: var(--red);
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,46,46,0.2), transparent);
+  margin: 0 8vw;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .about-grid,
+  .skills-layout,
+  .contact-wrapper { grid-template-columns: 1fr; gap: 40px; }
+
+  .about-visual { display: none; }
+
+  .projects-grid { grid-template-columns: 1fr; }
+  .proj-card:nth-child(n) { grid-column: span 1; }
+
+  .proj-overlay { opacity: 1; }
+
+  nav { padding: 16px 20px; }
+  .nav-links { gap: 4px; }
+  .nav-links a { padding: 6px 10px; font-size: 0.78rem; }
+
+  .section { padding: 80px 5vw; }
+
+  footer { flex-direction: column; gap: 16px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Loader -->
+<div class="loader" id="loader">
+  <div class="loader-name">Mahmoud Ahmed</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a class="nav-logo" href="#home">MA</a>
+  <ul class="nav-links">
+    <li><a href="#home">الرئيسية</a></li>
+    <li><a href="#about">عني</a></li>
+    <li><a href="#projects">مشاريعي</a></li>
+    <li><a href="#skills">مهاراتي</a></li>
+    <li><a href="#contact">تواصل</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <p class="hero-tag">GRAPHIC DESIGNER — CAIRO, EGYPT</p>
+  <h1>
+    Mahmoud
+    <span>Ahmed</span>
+  </h1>
+  <p class="hero-sub">
+    بصمم هويات بصرية واضحة ومؤثرة تخلي أي براند يبان بشكل احترافي ومميز.
+  </p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn-primary">شوف شغلي</a>
+    <a href="#contact" class="btn-outline">تواصل معايا</a>
+  </div>
+  <div class="hero-num">MA</div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>SCROLL</span>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<div class="divider"></div>
+<div class="section reveal" id="about">
+  <p class="section-label">ABOUT ME</p>
+  <h2 class="section-title">نبذة عني</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        أنا محمود أحمد، جرافيك ديزاينر متخصص في تصميم الهوية البصرية والسوشيال ميديا.
+        بؤمن إن التصميم الكويس مش بس شكل حلو، ده رسالة واضحة بتوصل للناس بشكل صح.
+      </p>
+      <p>
+        بشتغل بـ Adobe Photoshop وIllustrator وCanva، وعندي خبرة في مجالات متعددة من Marketing وOperations
+        خلّتني أفهم احتياجات الكلاينت أكتر وأقدم حلول بصرية حقيقية.
+      </p>
+      <div class="about-stats">
+        <div class="stat-box">
+          <div class="stat-num">+50</div>
+          <div class="stat-label">مشروع منجز</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">3+</div>
+          <div class="stat-label">سنوات خبرة</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">رضا العملاء</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">24H</div>
+          <div class="stat-label">وقت الاستجابة</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-visual">
+      <div class="about-img-frame">
+        <!-- ضع صورتك الشخصية هنا -->
+        ✦
+      </div>
+      <div class="about-badge">
+        MA
+        <small>Design</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div class="divider"></div>
+<div class="section reveal" id="projects">
+  <p class="section-label">WORK</p>
+  <h2 class="section-title">مشاريعي</h2>
+  <div class="projects-grid">
+
+    <!-- Card 1 — ضع صورة مشروع هنا -->
+    <div class="proj-card">
+      <div class="proj-img">
+        <!-- <img src="project1.jpg" alt="Brand Identity"> -->
+        ✦
+      </div>
+      <div class="proj-info">
+        <h3>هوية بصرية — براند</h3>
+        <p>Brand Identity · 2025</p>
+      </div>
+      <div class="proj-overlay">
+        <span class="proj-cat">BRAND IDENTITY</span>
+        <span class="proj-name">اسم المشروع</span>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="proj-card">
+      <div class="proj-img">
+        <!-- <img src="project2.jpg" alt="Logo Design"> -->
+        ✦
+      </div>
+      <div class="proj-info">
+        <h3>تصميم لوجو احترافي</h3>
+        <p>Logo Design · 2025</p>
+      </div>
+      <div class="proj-overlay">
+        <span class="proj-cat">LOGO DESIGN</span>
+        <span class="proj-name">اسم المشروع</span>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="proj-card">
+      <div class="proj-img">
+        <!-- <img src="project3.jpg" alt="Social Media"> -->
+        ✦
+      </div>
+      <div class="proj-info">
+        <h3>تصميم سوشيال ميديا</h3>
+        <p>Social Media · 2025</p>
+      </div>
+      <div class="proj-overlay">
+        <span class="proj-cat">SOCIAL MEDIA</span>
+        <span class="proj-name">اسم المشروع</span>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="proj-card">
+      <div class="proj-img">
+        <!-- <img src="project4.jpg" alt="Ad Design"> -->
+        ✦
+      </div>
+      <div class="proj-info">
+        <h3>تصميم إعلان منتج</h3>
+        <p>Advertisement · 2025</p>
+      </div>
+      <div class="proj-overlay">
+        <span class="proj-cat">ADVERTISING</span>
+        <span class="proj-name">اسم المشروع</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div class="divider"></div>
+<div class="section reveal" id="skills">
+  <p class="section-label">SKILLS</p>
+  <h2 class="section-title">مهاراتي</h2>
+  <div class="skills-layout">
+    <div class="skills-text">
+      <p>
+        بتعامل مع كل مشروع بأسلوب مختلف حسب احتياجاته، وبستخدم مجموعة من الأدوات الاحترافية
+        علشان أضمن أعلى جودة في التسليم.
+      </p>
+      <div class="tools-grid">
+        <span class="tool-chip">Photoshop</span>
+        <span class="tool-chip">Illustrator</span>
+        <span class="tool-chip">Canva</span>
+        <span class="tool-chip">Logo Design</span>
+        <span class="tool-chip">Branding</span>
+        <span class="tool-chip">Social Media</span>
+        <span class="tool-chip">Typography</span>
+        <span class="tool-chip">Color Theory</span>
+      </div>
+    </div>
+    <div class="skill-bars" id="skillBars">
+      <div class="skill-item">
+        <div class="skill-top"><span>Adobe Photoshop</span><span>90%</span></div>
+        <div class="skill-track"><div class="skill-fill" style="--pct:90%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-top"><span>Adobe Illustrator</span><span>85%</span></div>
+        <div class="skill-track"><div class="skill-fill" style="--pct:85%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-top"><span>Logo & Branding</span><span>88%</span></div>
+        <div class="skill-track"><div class="skill-fill" style="--pct:88%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-top"><span>Social Media Design</span><span>92%</span></div>
+        <div class="skill-track"><div class="skill-fill" style="--pct:92%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-top"><span>Canva</span><span>95%</span></div>
+        <div class="skill-track"><div class="skill-fill" style="--pct:95%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="divider"></div>
+<div class="section reveal" id="contact">
+  <p class="section-label">CONTACT</p>
+  <h2 class="section-title">تواصل معايا</h2>
+  <div class="contact-wrapper">
+    <div>
+      <div class="contact-text">
+        <p>
+          مستعد لأي مشروع جديد أو تعاون مثمر.
+          بعت رسالة وهرد عليك في أقرب وقت. 🔥
+        </p>
+      </div>
+      <div class="contact-links">
+        <a href="tel:01100336883" class="contact-link">
+          <span class="link-icon">📞</span>
+          01100336883
+        </a>
+        <a href="https://wa.me/201100336883" target="_blank" class="contact-link">
+          <span class="link-icon">💬</span>
+          واتساب
+        </a>
+        <a href="mailto:ahmedelfares544@gmail.com" class="contact-link">
+          <span class="link-icon">✉</span>
+          ahmedelfares544@gmail.com
+        </a>
+        <!-- أضف لينكات السوشيال ميديا بتاعتك هنا -->
+        <a href="https://instagram.com/USERNAME" target="_blank" class="contact-link">
+          <span class="link-icon">📷</span>
+          Instagram
+        </a>
+        <a href="https://behance.net/USERNAME" target="_blank" class="contact-link">
+          <span class="link-icon">🎨</span>
+          Behance
+        </a>
+      </div>
+    </div>
+    <form class="contact-form" onsubmit="return false;">
+      <input type="text" class="form-input" placeholder="اسمك">
+      <input type="email" class="form-input" placeholder="إيميلك">
+      <textarea class="form-textarea" placeholder="رسالتك..."></textarea>
+      <button class="form-btn">ابعت الرسالة ←</button>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">MA</span>
+  <p>© 2026 Mahmoud Ahmed — All Rights Reserved</p>
+  <p style="color:var(--red); font-size:0.75rem;">Cairo, Egypt 🔴</p>
+</footer>
+
+<script>
+// ===== LOADER =====
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hide');
+  }, 1900);
+});
+
+// ===== CURSOR =====
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx - 6 + 'px';
+  cursor.style.top = my - 6 + 'px';
+});
+
+function animRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx - 18 + 'px';
+  ring.style.top = ry - 18 + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+document.querySelectorAll('a, button, .proj-card, .stat-box, .tool-chip').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'scale(2)';
+    ring.style.transform = 'scale(1.5)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'scale(1)';
+    ring.style.transform = 'scale(1)';
+  });
+});
+
+// ===== NAVBAR SCROLL =====
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ===== REVEAL =====
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('show');
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// ===== SKILL BARS =====
+const skillObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.skill-fill').forEach(fill => {
+        fill.classList.add('animate');
+      });
+    }
+  });
+}, { threshold: 0.3 });
+
+const skillBars = document.getElementById('skillBars');
+if (skillBars) skillObs.observe(skillBars);
+</script>
+</body>
+</html>
